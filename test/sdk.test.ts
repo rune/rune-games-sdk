@@ -237,7 +237,6 @@ describe("sdk", function () {
   test("deterministicRandom() changes value based on challengeNumber", async function () {
     // Mimic challengeNumber being set before loading
     globalThis._runeChallengeNumber = 123
-    Rune._onLoad()
 
     const randomArray = [...Array(7)].map(() =>
       Math.round(Rune.deterministicRandom() * 10)
