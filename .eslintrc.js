@@ -28,6 +28,7 @@ module.exports = {
     require: "readonly",
     setTimeout: "readonly",
     globalThis: "readonly",
+    window: "readonly",
   },
 
   overrides: [{
