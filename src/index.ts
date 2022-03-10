@@ -29,7 +29,6 @@ export interface RuneExport {
   _randomNumberGenerator: (seed: number) => () => number
   _hashFromString: (str: string) => number
   _resetDeterministicRandom: () => void
-  _getQueryParams: () => ({[key: string]: string})
 }
 
 export const Rune: RuneExport = {
@@ -190,48 +189,7 @@ export const Rune: RuneExport = {
     // Reset randomness to be deterministic across plays
     Rune.deterministicRandom = Rune._randomNumberGenerator(Rune.getChallengeNumber())
   },
-  _getQueryParams: () => {
-    return decodeURI(window.location.search)
-        .replace('?', '')
-        .split('&')
-        .map(param => param.split('='))
-        .reduce((values, [ key, value ]) => {
-          values[ key ] = value
-          return values
-        }, {} as {[key: string]: string})
-  }
 }
-
-//Safari ios throttles requestAnimationFrame when user has not interacted with the iframe at least once.
-//In case the games are not using clicks (for instance only swiping), ios will not treat these interactions
-//with the iframe as user interacting. As a workaround, in the browser we will start overlay with
-//click events disabled and display an invisible div inside the iframe above the canvas.
-//This way the users will click on the transparent div element the very first time. We will let our client
-//know about it with _INITIAL_OVERLAY_CLICK event and the transparent div will remove itself.
-//Afterwards the play/pause will be once again fully controlled by our client.
-;(() => {
-  const queryParams = Rune._getQueryParams()
-
-  if (!!queryParams.enableInitialOverlayInBrowser && queryParams.enableInitialOverlayInBrowser === '1') {
-    document.addEventListener('DOMContentLoaded', function () {
-      const div = document.createElement('div')
-      div.setAttribute('style', "top: 0; bottom: 0; left: 0; right: 0; position: absolute; z-index: 9999;")
-
-      div.addEventListener('click', () => {
-        div.remove()
-        if (globalThis.postRuneEvent) {
-          globalThis.postRuneEvent({type: "_INITIAL_OVERLAY_CLICK"})
-        }
-      })
-      document.body.appendChild(div)
-
-      if (globalThis.postRuneEvent) {
-        globalThis.postRuneEvent({type: "_GAME_LOAD_STARTED"})
-      }
-    })
-  }
-})();
-
 
 // Global namespace properties needed for communicating with Rune
 declare global {
@@ -245,5 +203,3 @@ export type RuneGameEvent =
   | { type: "GAME_OVER"; score: number; challengeNumber: number }
   | { type: "ERR"; errMsg: string }
   | { type: "SCORE"; score: number; challengeNumber: number }
-  | { type: "_INITIAL_OVERLAY_CLICK"}
-  | { type: "_GAME_LOAD_STARTED"}

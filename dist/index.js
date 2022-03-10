@@ -158,36 +158,6 @@ exports.Rune = {
     _resetDeterministicRandom: function () {
         // Reset randomness to be deterministic across plays
         exports.Rune.deterministicRandom = exports.Rune._randomNumberGenerator(exports.Rune.getChallengeNumber());
-    },
-    _getQueryParams: function () {
-        return decodeURI(window.location.search)
-            .replace('?', '')
-            .split('&')
-            .map(function (param) { return param.split('='); })
-            .reduce(function (values, _a) {
-            var key = _a[0], value = _a[1];
-            values[key] = value;
-            return values;
-        }, {});
     }
 };
-(function () {
-    var queryParams = exports.Rune._getQueryParams();
-    if (!!queryParams.enableInitialOverlayInBrowser && queryParams.enableInitialOverlayInBrowser === '1') {
-        document.addEventListener('DOMContentLoaded', function () {
-            var div = document.createElement('div');
-            div.setAttribute('style', "top: 0; bottom: 0; left: 0; right: 0; position: absolute; z-index: 9999;");
-            div.addEventListener('click', function () {
-                div.remove();
-                if (globalThis.postRuneEvent) {
-                    globalThis.postRuneEvent({ type: "_INITIAL_OVERLAY_CLICK" });
-                }
-            });
-            document.body.appendChild(div);
-            if (globalThis.postRuneEvent) {
-                globalThis.postRuneEvent({ type: "_GAME_LOAD_STARTED" });
-            }
-        });
-    }
-})();
 //# sourceMappingURL=index.js.map
