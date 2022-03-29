@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/rune/rune-games-sdk#readme",
   "devDependencies": {
+    "@rollup/plugin-replace": "^4.0.0",
     "@rollup/plugin-typescript": "^8.3.1",
     "@types/jest": "^27.0.2",
     "@types/node": "^16.9.6",

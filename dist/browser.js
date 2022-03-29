@@ -3,10 +3,10 @@ var Rune = (function () {
 
     function getQueryParams() {
         var _a;
-        if (!((_a = globalThis.location) === null || _a === void 0 ? void 0 : _a.search)) {
+        if (!((_a = window.location) === null || _a === void 0 ? void 0 : _a.search)) {
             return {};
         }
-        return decodeURI(globalThis.location.search)
+        return decodeURI(window.location.search)
             .replace("?", "")
             .split("&")
             .map(function (param) { return param.split("="); })
@@ -32,13 +32,13 @@ var Rune = (function () {
                 div.setAttribute("style", "top: 0; bottom: 0; left: 0; right: 0; width: 100vw; height: 100vh; position: absolute; z-index: 9999;");
                 div.addEventListener("click", function () {
                     div.remove();
-                    if (globalThis.postRuneEvent) {
-                        globalThis.postRuneEvent({ type: "BROWSER_INITIAL_OVERLAY_CLICKED" });
+                    if (window.postRuneEvent) {
+                        window.postRuneEvent({ type: "BROWSER_INITIAL_OVERLAY_CLICKED" });
                     }
                 });
                 document.body.appendChild(div);
-                if (globalThis.postRuneEvent) {
-                    globalThis.postRuneEvent({ type: "BROWSER_IFRAME_LOADED" });
+                if (window.postRuneEvent) {
+                    window.postRuneEvent({ type: "BROWSER_IFRAME_LOADED" });
                 }
             });
         }
@@ -80,8 +80,8 @@ var Rune = (function () {
             Rune._pauseGame = pauseGame;
             Rune._getScore = getScore;
             // When running inside Rune, runePostMessage will always be defined.
-            if (globalThis.postRuneEvent) {
-                globalThis.postRuneEvent({ type: "INIT", version: Rune.version });
+            if (window.postRuneEvent) {
+                window.postRuneEvent({ type: "INIT", version: Rune.version });
             }
             else {
                 Rune._mockEvents();
@@ -95,13 +95,13 @@ var Rune = (function () {
             var score = Rune._getScore();
             Rune._validateScore(score);
             Rune._resetDeterministicRandom();
-            (_a = globalThis.postRuneEvent) === null || _a === void 0 ? void 0 : _a.call(globalThis, {
+            (_a = window.postRuneEvent) === null || _a === void 0 ? void 0 : _a.call(window, {
                 type: "GAME_OVER",
                 score: score,
                 challengeNumber: Rune.getChallengeNumber()
             });
         },
-        getChallengeNumber: function () { var _a; return (_a = globalThis._runeChallengeNumber) !== null && _a !== void 0 ? _a : 1; },
+        getChallengeNumber: function () { var _a; return (_a = window._runeChallengeNumber) !== null && _a !== void 0 ? _a : 1; },
         deterministicRandom: function () {
             // The first time that this method is called, replace it with our
             // deterministic random number generator and return the first number.
@@ -114,7 +114,7 @@ var Rune = (function () {
             var _a;
             var score = Rune._getScore();
             Rune._validateScore(score);
-            (_a = globalThis.postRuneEvent) === null || _a === void 0 ? void 0 : _a.call(globalThis, {
+            (_a = window.postRuneEvent) === null || _a === void 0 ? void 0 : _a.call(window, {
                 type: "SCORE",
                 score: score,
                 challengeNumber: Rune.getChallengeNumber()
@@ -146,7 +146,7 @@ var Rune = (function () {
         // Create mock events to support development
         _mockEvents: function () {
             // Log posted events to the console (in production, these are processed by Rune)
-            globalThis.postRuneEvent = function (event) {
+            window.postRuneEvent = function (event) {
                 return console.log("RUNE: Posted ".concat(JSON.stringify(event)));
             };
             // Mimic the user tapping Play after 3 seconds
@@ -161,7 +161,7 @@ var Rune = (function () {
                 var score = Rune._getScore();
                 Rune._validateScore(score);
                 Rune._resetDeterministicRandom();
-                (_a = globalThis.postRuneEvent) === null || _a === void 0 ? void 0 : _a.call(globalThis, {
+                (_a = window.postRuneEvent) === null || _a === void 0 ? void 0 : _a.call(window, {
                     type: "GAME_OVER",
                     score: score,
                     challengeNumber: Rune.getChallengeNumber()
