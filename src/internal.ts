@@ -31,19 +31,19 @@ function initialOverlay() {
       const div = document.createElement("div")
       div.setAttribute(
         "style",
-        "top: 0; bottom: 0; left: 0; right: 0; width: 100vw; height: 100vh; position: absolute; z-index: 9999;",
+        "top: 0; bottom: 0; left: 0; right: 0; width: 100vw; height: 100vh; position: absolute; z-index: 9999;"
       )
 
       div.addEventListener("click", () => {
         div.remove()
         if (globalThis.postRuneEvent) {
-          globalThis.postRuneEvent({type: "BROWSER_INITIAL_OVERLAY_CLICKED"})
+          globalThis.postRuneEvent({ type: "BROWSER_INITIAL_OVERLAY_CLICKED" })
         }
       })
       document.body.appendChild(div)
 
       if (globalThis.postRuneEvent) {
-        globalThis.postRuneEvent({type: "BROWSER_IFRAME_LOADED"})
+        globalThis.postRuneEvent({ type: "BROWSER_IFRAME_LOADED" })
       }
     })
   }
